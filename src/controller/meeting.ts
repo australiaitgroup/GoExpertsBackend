@@ -1,7 +1,7 @@
 import { Request, Response, RequestHandler } from 'express';
 import { v4 as uuidv4 } from "uuid";
 import Meeting from '../models/meeting';
-import { IcreateCommentQueries } from '../types/meeting';
+import { IcreateCommentQueries } from '../types/meeting.d';
 import Expert from "../models/expert";
 
 /**
@@ -122,7 +122,7 @@ export const getMeetingByUserID: RequestHandler = async (
 ) => {
   const userID = req.params.id;
   const meeting = await Meeting.find({userID})
-    .populate('expert', { _id: 0, firstName: 1, lastName: 1, jobTitle: 1, avatar: 1 }).exec();
+    .populate('expert', { _id: 0, firstName: 1, lastName: 1, jobTitle: 1, photo: 1 }).exec();
   return res.json(meeting);
 };
 

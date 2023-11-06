@@ -2,13 +2,9 @@ import { Request, Response, RequestHandler } from "express";
 import { v4 as uuidv4 } from "uuid";
 import Expert from "../models/expert";
 import User from "../models/users";
-import {
-  IGetExpertsQueries,
-  IExpertFilter,
-  IExpertSortBy,
-} from "../types/expert";
+import { IGetExpertsQueries } from "../types/expert.d";
 import sortingType from "../types/sortingType";
-import { IUser } from "../types/user";
+import { IUser } from "../types/user.d";
 
 /**
  * POST api/experts
@@ -138,14 +134,11 @@ export const getExperts: RequestHandler = async (
   }
 
   // db sort
-  const sortBy: IExpertSortBy = {};
-  if (queries.sort === sortingType.RECOMMEND) {
-    sortBy.averageRating = -1;
-  } else if (queries.sort === sortingType.PUBLISH_DATE) {
-    sortBy.createDate = -1;
-  } else if (queries.sort === sortingType.POPULAR) {
-    sortBy.bookedAmount = -1;
-  }
+  const sortingOptions: Record<string, string> = {
+    [sortingType.RECOMMEND]: '-averageRating',
+    [sortingType.PUBLISH_DATE]: 'createDate',
+    [sortingType.POPULAR]: '-bookedAmount',
+  };
 
   try {
     // pagination
@@ -155,11 +148,15 @@ export const getExperts: RequestHandler = async (
       return res.status(400).send("Query out of range");
     }
 
-    const experts = await Expert.find(filter)
-      .sort(sortBy)
+    const query = Expert.find(filter)
       .limit(12)
-      .skip((queries.page - 1) * 12)
-      .exec();
+      .skip((queries.page - 1) * 12);
+
+    if (sortingOptions[queries.sort]) {
+      query.sort(sortingOptions[queries.sort]);
+    }
+
+    const experts = await query.exec();
 
     return res.json({ experts, totalPages, curPage: queries.page });
   } catch (error) {

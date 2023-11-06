@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IMeeting } from "../types/meeting";
+import { IMeeting } from "../types/meeting.d";
 
 const meetingSchema = new Schema({
   meetingID: {

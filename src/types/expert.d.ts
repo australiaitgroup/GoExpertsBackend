@@ -70,9 +70,3 @@ export interface IExpertFilter {
     | { specialities: { $regex: string; $options: string } }
   )[];
 }
-
-export interface IExpertSortBy {
-  averageRating?: number;
-  bookedAmount?: number;
-  createDate?: number;
-}

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IExpert } from "../types/expert";
+import { IExpert } from "../types/expert.d";
 
 const ExpertSchema = new mongoose.Schema({
   expertID: {
