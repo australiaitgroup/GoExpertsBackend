@@ -16,13 +16,6 @@ const TopicOfInterestSchema = new mongoose.Schema({
   },
 });
 
-TopicOfInterestSchema.pre('save', function (next) {
-  if(!this?.topicId) {
-    this.topicId = uuidv4();
-  }
-  next();
-})
-
 const Topic = mongoose.model("topic", TopicOfInterestSchema, 'Topics');
 
 export default Topic;
